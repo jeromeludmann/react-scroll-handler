@@ -1,6 +1,6 @@
 {
   "name": "react-scroll-handler",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Handle scroll events with React",
   "main": "lib/ScrollHandler.js",
   "scripts": {
