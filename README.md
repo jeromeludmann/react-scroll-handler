@@ -7,7 +7,7 @@ Just made for my needs, feel free to improve it.
 ## Installation
 
 ```sh
-npm install jeromeludmann/react-scroll-handler
+npm install react-scroll-handler
 ```
 
 ## Usage
@@ -35,11 +35,3 @@ See examples below:
 * `isBottom`: boolean
 * `isUp`: boolean
 * `isDown`: boolean
-
-## Development
-
-```sh
-git clone https://github.com/jeromeludmann/react-scroll-handler
-cd react-scroll-handler
-npm run watch
-```
