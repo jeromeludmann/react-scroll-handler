@@ -1,0 +1,32 @@
+:local .stickedBar {
+  top: 0;
+  left: 0;
+  height: 40px;
+  width: 100%;
+  padding: 10px;
+  margin: 0;
+}
+
+:local .restoredStickedBar {
+  composes: stickedBar;
+
+  position: absolute;
+}
+
+:local .hiddenStickedBar {
+  composes: stickedBar;
+
+  position: fixed;
+  border-bottom: 1px solid #ccc;
+  background-color: white;
+  opacity: 0;
+}
+
+:local .visibleStickedBar {
+  composes: stickedBar;
+
+  position: fixed;
+  border-bottom: 1px solid #ccc;
+  background-color: white;
+  opacity: 100%;
+}
