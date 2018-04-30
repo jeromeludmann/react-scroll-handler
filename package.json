@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Handle scroll events with React",
   "main": "lib/ScrollHandler.js",
+  "types": "lib/ScrollHandler.d.js",
   "scripts": {
     "clean": "rimraf lib/",
     "build": "rollup --config ./rollup.config.js",
