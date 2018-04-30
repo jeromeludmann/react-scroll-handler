@@ -1,0 +1,11 @@
+node_modules/
+.vscode/
+src/
+examples/
+tsconfig.json
+tslint.json
+rollup.config.js
+webpack.config.js
+.gitignore
+npm-debug.log*
+.*cache*

@@ -9,7 +9,8 @@
     "build": "rollup --config ./rollup.config.js",
     "watch": "npm run build -- -w",
     "dev:infinite-scroll": "EXAMPLE=InfiniteScroll/index.tsx webpack-serve --config ./webpack.config.js",
-    "dev:sticked-bar": "EXAMPLE=StickedBar/index.tsx webpack-serve --config ./webpack.config.js"
+    "dev:sticked-bar": "EXAMPLE=StickedBar/index.tsx webpack-serve --config ./webpack.config.js",
+    "prepublish": "npm run clean && npm run build"
   },
   "keywords": [
     "react",
