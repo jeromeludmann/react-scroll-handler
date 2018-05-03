@@ -1,16 +1,16 @@
 import React, { SyntheticEvent } from 'react'
 
 export interface Props {
-  onTop?: (scroll: ScrollState) => void
-  onBottom?: (scroll: ScrollState) => void
-  onUp?: (scroll: ScrollState) => void
-  onDown?: (scroll: ScrollState) => void
+  onTop?: (position: ScrollPosition) => void
+  onBottom?: (position: ScrollPosition) => void
+  onUp?: (position: ScrollPosition) => void
+  onDown?: (position: ScrollPosition) => void
   topOffset?: number
   bottomOffset?: number
   children?: any
 }
 
-export interface ScrollState {
+export interface ScrollPosition {
   scrollTop: number
   isTop: boolean
   isBottom: boolean
@@ -18,25 +18,66 @@ export interface ScrollState {
   isDown: boolean
 }
 
-interface ScrollEventData {
-  scrollTop: number
-  offsetHeight: number
-  scrollHeight: number
-}
-
 export default class ScrollHandler extends React.Component<Props, {}> {
-  private lastScrollTop = 0
-  private isTop = true
-  private isBottom = false
-  private isUp = false
-  private isDown = false
-  private wrapper: React.CSSProperties = {
+  private scrollable: React.CSSProperties = {
     overflowY: 'scroll',
     height: 'inherit'
   }
 
+  private lastScrollTop = 0
+  private currentScrollTop = 0
+
+  private position: { [key: string]: boolean } = {
+    isUp: false,
+    isDown: false,
+    isTop: true,
+    isBottom: false
+  }
+
+  private handlers: { [key: string]: (position: ScrollPosition) => void } = {
+    onUp: null,
+    onDown: null,
+    onTop: null,
+    onBottom: null
+  }
+
   public componentDidMount() {
+    this.assignHandlers(this.props)
+  }
+
+  public componentWillUnmount() {
+    if (window.onscroll) {
+      window.onscroll = null
+    }
+  }
+
+  public componentDidUpdate() {
+    this.assignHandlers(this.props)
+  }
+
+  public render() {
     if (!this.props.children) {
+      return <div />
+    }
+
+    return (
+      <div style={this.scrollable} onScroll={this.handleScrollEvent}>
+        {this.props.children}
+      </div>
+    )
+  }
+
+  private assignHandlers = (props: Props) => {
+    this.handlers = {
+      onUp: props.onUp,
+      onDown: props.onDown,
+      onTop: props.onTop,
+      onBottom: props.onBottom
+    }
+
+    if (props.children) {
+      window.onscroll = null
+    } else {
       window.onscroll = () =>
         this.handleScroll({
           scrollTop: window.scrollY || window.pageYOffset,
@@ -46,101 +87,42 @@ export default class ScrollHandler extends React.Component<Props, {}> {
     }
   }
 
-  public render() {
-    if (!this.props.children) {
-      return <div />
-    }
-
-    return (
-      <div style={this.wrapper} onScroll={this.handleScrollEvent}>
-        {this.props.children}
-      </div>
-    )
-  }
-
   private handleScrollEvent = (ev: SyntheticEvent<any>) => {
     return this.handleScroll(ev.currentTarget)
   }
 
-  private handleScroll = (scrollData: ScrollEventData) => {
-    for (const cb of [
-      this.handleScrollUp,
-      this.handleScrollDown,
-      this.handleScrollTop,
-      this.handleScrollBottom
-    ]) {
-      cb(scrollData)
-    }
+  private handleScroll = (scrollData: {
+    scrollTop: number
+    offsetHeight: number
+    scrollHeight: number
+  }) => {
+    this.currentScrollTop = scrollData.scrollTop
+
+    this.callHandler('Up', scrollData.scrollTop < this.lastScrollTop)
+    this.callHandler('Down', scrollData.scrollTop > this.lastScrollTop)
+    this.callHandler('Top', scrollData.scrollTop <= (this.props.topOffset || 0))
+    this.callHandler(
+      'Bottom',
+      scrollData.scrollTop + scrollData.offsetHeight >=
+        scrollData.scrollHeight - (this.props.bottomOffset || 0)
+    )
 
     this.lastScrollTop = scrollData.scrollTop
   }
 
-  private handleScrollUp = ({ scrollTop }: ScrollEventData) => {
-    this.isUp = scrollTop < this.lastScrollTop
+  private callHandler = (position: string, condition: boolean) => {
+    this.position[`is${position}`] = condition
 
-    if (!this.props.onUp) {
+    if (!this.handlers[`on${position}`] || !this.position[`is${position}`]) {
       return
     }
 
-    if (!this.isUp) {
-      return
-    }
-
-    this.props.onUp(this.getScrollCurrentState(scrollTop))
+    return this.handlers[`on${position}`]({
+      scrollTop: this.currentScrollTop,
+      isUp: this.position.isUp,
+      isDown: this.position.isDown,
+      isTop: this.position.isTop,
+      isBottom: this.position.isBottom
+    })
   }
-
-  private handleScrollDown = ({ scrollTop }: ScrollEventData) => {
-    this.isDown = scrollTop > this.lastScrollTop
-
-    if (!this.props.onDown) {
-      return
-    }
-
-    if (!this.isDown) {
-      return
-    }
-
-    this.props.onDown(this.getScrollCurrentState(scrollTop))
-  }
-
-  private handleScrollTop = ({ scrollTop }: ScrollEventData) => {
-    this.isTop = scrollTop <= (this.props.topOffset || 0)
-
-    if (!this.props.onTop) {
-      return
-    }
-
-    if (!this.isTop) {
-      return
-    }
-
-    this.props.onTop(this.getScrollCurrentState(scrollTop))
-  }
-
-  private handleScrollBottom = ({
-    scrollTop,
-    offsetHeight,
-    scrollHeight
-  }: ScrollEventData) => {
-    this.isBottom =
-      scrollTop + offsetHeight >= scrollHeight - (this.props.bottomOffset || 0)
-
-    if (!this.props.onBottom) {
-      return
-    }
-
-    if (!this.isBottom) {
-      return
-    }
-
-    this.props.onBottom(this.getScrollCurrentState(scrollTop))
-  }
-
-  private getScrollCurrentState = (scrollTop: number) => ({
-    scrollTop,
-    isTop: this.isTop,
-    isBottom: this.isBottom,
-    isUp: this.isUp,
-    isDown: this.isDown
-  })
 }
