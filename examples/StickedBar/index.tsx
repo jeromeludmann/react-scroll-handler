@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { generateData } from '../helpers'
-import ScrollHandler, { ScrollState } from '../../lib/ScrollHandler'
+import ScrollHandler, { ScrollPosition } from '../../lib/ScrollHandler'
 
 const {
   restoredStickedBar,
@@ -45,13 +45,13 @@ export default class StickedBar extends React.Component<{}, State> {
     )
   }
 
-  private handleScrollTop = (scrollState: ScrollState) => {
+  private handleScrollTop = (scrollState: ScrollPosition) => {
     if (!scrollState.isUp) {
       this.setState({ className: restoredStickedBar })
     }
   }
 
-  private handleScrollUp = (scrollState: ScrollState) => {
+  private handleScrollUp = (scrollState: ScrollPosition) => {
     if (scrollState.scrollTop === 0) {
       this.setState({ className: restoredStickedBar })
     } else if (!scrollState.isTop) {
@@ -59,7 +59,7 @@ export default class StickedBar extends React.Component<{}, State> {
     }
   }
 
-  private handleScrollDown = (scrollState: ScrollState) => {
+  private handleScrollDown = (scrollState: ScrollPosition) => {
     if (scrollState.isTop) {
       return
     }
