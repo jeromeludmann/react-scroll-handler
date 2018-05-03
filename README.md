@@ -19,16 +19,16 @@ See examples below:
 
 ## Props
 
-| Property       | Type                    | Description                       |
-| -------------- | ----------------------- | --------------------------------- |
-| `onTop`        | `(ScrollState) => void` | Triggers when scroll is to top    |
-| `onBottom`     | `(ScrollState) => void` | Triggers when scroll is to bottom |
-| `onUp`         | `(ScrollState) => void` | Triggers when scroll goes up      |
-| `onDown`       | `(ScrollState) => void` | Triggers when scroll goes down    |
-| `topOffset`    | `number`                | Defines top offset                |
-| `bottomOffset` | `number`                | Defines bottom offset             |
+| Property       | Type                       | Description                       |
+| -------------- | -------------------------- | --------------------------------- |
+| `onTop`        | `(ScrollPosition) => void` | Triggers when scroll is to top    |
+| `onBottom`     | `(ScrollPosition) => void` | Triggers when scroll is to bottom |
+| `onUp`         | `(ScrollPosition) => void` | Triggers when scroll goes up      |
+| `onDown`       | `(ScrollPosition) => void` | Triggers when scroll goes down    |
+| `topOffset`    | `number`                   | Defines top offset                |
+| `bottomOffset` | `number`                   | Defines bottom offset             |
 
-`ScrollState`:
+`ScrollPosition`:
 
 * `scrollTop`: number
 * `isTop`: boolean
