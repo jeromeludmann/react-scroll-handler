@@ -1,15 +1,15 @@
 /// <reference types="react" />
 import React from 'react';
 export interface Props {
-    onTop?: (scroll: ScrollState) => void;
-    onBottom?: (scroll: ScrollState) => void;
-    onUp?: (scroll: ScrollState) => void;
-    onDown?: (scroll: ScrollState) => void;
+    onTop?: (position: ScrollPosition) => void;
+    onBottom?: (position: ScrollPosition) => void;
+    onUp?: (position: ScrollPosition) => void;
+    onDown?: (position: ScrollPosition) => void;
     topOffset?: number;
     bottomOffset?: number;
     children?: any;
 }
-export interface ScrollState {
+export interface ScrollPosition {
     scrollTop: number;
     isTop: boolean;
     isBottom: boolean;
@@ -17,19 +17,17 @@ export interface ScrollState {
     isDown: boolean;
 }
 export default class ScrollHandler extends React.Component<Props, {}> {
+    private scrollable;
     private lastScrollTop;
-    private isTop;
-    private isBottom;
-    private isUp;
-    private isDown;
-    private wrapper;
+    private currentScrollTop;
+    private position;
+    private handlers;
     componentDidMount(): void;
+    componentWillUnmount(): void;
+    componentDidUpdate(): void;
     render(): JSX.Element;
+    private assignHandlers;
     private handleScrollEvent;
     private handleScroll;
-    private handleScrollUp;
-    private handleScrollDown;
-    private handleScrollTop;
-    private handleScrollBottom;
-    private getScrollCurrentState;
+    private callHandler;
 }
